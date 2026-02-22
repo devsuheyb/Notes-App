@@ -36,7 +36,7 @@ const NotesWrapper = () => {
     ]);
   };
 
-  // to identify when the note createdAt
+  // to identify time when the note created At
   useEffect(() => {
     const interval = setInterval(() => {
       setNotes((prev) => [...prev]);
@@ -49,8 +49,14 @@ const NotesWrapper = () => {
   const deleteNotes =(ID:number)=>{
     setNotes(prevNote=>prevNote.filter((note)=> note.id !== ID))
   }
+ // favorite  toggle function 
+  const favoriteNotes =(ID:number)=>{
+    setNotes(prevNote=> prevNote.map((note)=> note.id == ID?  {...note,favorite:!note.favorite}:note))
+  }
 
-
+  
+  
+  // filtering notes based on select values
   const filteredNote = notes.filter((note) => {
     if (selectValue === "All") {
       return true;
@@ -109,7 +115,7 @@ const NotesWrapper = () => {
             return note.isEditing ? (
               <EditNotes key={note.id} note={note} />
             ) : (
-              <ListOfNotes deleteNotes={deleteNotes} key={note.id} note={note} />
+              <ListOfNotes deleteNotes={deleteNotes} key={note.id} note={note} favoriteNotes={favoriteNotes} />
             );
           })}
         </div>
