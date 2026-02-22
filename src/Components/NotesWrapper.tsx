@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import NotesForm from "./NotesForm";
 import ListOfNotes from "./ListOfNotes";
 import EditNotes from "./EditNotes";
@@ -16,8 +16,7 @@ interface NotesType {
 }
 const NotesWrapper = () => {
   const [notes, setNotes] = useState<NotesType[]>([]);
-
-  // time 'ago' calculated here
+  const [selectValue, setSelectValue] = useState<string>("All");
 
   // adding Notes function
   const addNotes = (title: string, message: string) => {
@@ -36,11 +35,43 @@ const NotesWrapper = () => {
       },
     ]);
   };
+
+  // to identify when the note createdAt
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNotes((prev) => [...prev]);
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // delete Notes function 
+  const deleteNotes =(ID:number)=>{
+    setNotes(prevNote=>prevNote.filter((note)=> note.id !== ID))
+  }
+
+
+  const filteredNote = notes.filter((note) => {
+    if (selectValue === "All") {
+      return true;
+    }
+    if (selectValue === "New") {
+      return note.createdAt !== note.updatedAt;
+    }
+    if (selectValue === "Old") {
+      return note.createdAt === note.updatedAt;
+    }
+    if (selectValue === "Favorite") {
+      return note.favorite;
+    }
+  });
+
   return (
     <div className="flex justify-center mt-20">
-      <div className="w-200   flex flex-col items-center  gap-5">
+      <div className="w-200   flex flex-col   gap-5">
         <div className="border w-full">
           <div className="">
+            <h1 className="flex justify-center capitalize mt-5">notes App</h1>
             <div className="flex justify-end pr-5 pt-5">
               <Search />
             </div>
@@ -53,10 +84,34 @@ const NotesWrapper = () => {
           <div></div>
         </div>
 
-        <div className="w-full border ">
-          {/* this is where notes goes */}
-          <ListOfNotes />
-          <EditNotes />
+        <div>
+          <div className="flex gap-2 border w-fit p-2">
+            <p className="capitalize">filter By :</p>
+            <div>
+              <select
+                value={selectValue}
+                onChange={(e) => setSelectValue(e.target.value)}
+                name=""
+                id=""
+                className="focus:outline-none border w-fit"
+              >
+                <option value="All">All</option>
+                <option value="Favorite">Favorite</option>
+                <option value="New">New</option>
+                <option value="Old">Old</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div className=" w-203 flex flex-wrap gap-x-5 gap-y-4 px-4 ">
+          {filteredNote.map((note) => {
+            return note.isEditing ? (
+              <EditNotes key={note.id} note={note} />
+            ) : (
+              <ListOfNotes deleteNotes={deleteNotes} key={note.id} note={note} />
+            );
+          })}
         </div>
       </div>
     </div>
