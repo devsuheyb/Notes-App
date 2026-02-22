@@ -54,7 +54,16 @@ const NotesWrapper = () => {
     setNotes(prevNote=> prevNote.map((note)=> note.id == ID?  {...note,favorite:!note.favorite}:note))
   }
 
-  
+  // edit function start here
+  const editNotes =(ID:number,title:string,message:string,)=>{
+    const update= Date.now()
+    setNotes(prev=> prev.map((note)=> note.id ===ID ? {...note, updatedAt:update, title,message ,isEditing:false}:note))
+  }
+
+  // stating edit function
+  const startEdit = (ID:number) =>{
+        setNotes(prev=> prev.map((note)=> note.id ===ID ? {...note, uisEditing:true}:note))
+  }
   
   // filtering notes based on select values
   const filteredNote = notes.filter((note) => {
