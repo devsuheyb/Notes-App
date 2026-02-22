@@ -55,14 +55,14 @@ const NotesWrapper = () => {
   }
 
   // edit function start here
-  const editNotes =(ID:number,title:string,message:string,)=>{
+  const editNotes =(ID:number,title:string,message:string)=>{
     const update= Date.now()
     setNotes(prev=> prev.map((note)=> note.id ===ID ? {...note, updatedAt:update, title,message ,isEditing:false}:note))
   }
 
   // stating edit function
   const startEdit = (ID:number) =>{
-        setNotes(prev=> prev.map((note)=> note.id ===ID ? {...note, uisEditing:true}:note))
+        setNotes(prev=> prev.map((note)=> note.id ===ID ? {...note, isEditing:true}:note))
   }
   
   // filtering notes based on select values
@@ -122,9 +122,9 @@ const NotesWrapper = () => {
         <div className=" w-203 flex flex-wrap gap-x-5 gap-y-4 px-4 ">
           {filteredNote.map((note) => {
             return note.isEditing ? (
-              <EditNotes key={note.id} note={note} />
+              <EditNotes key={note.id} note={note} editNotes={editNotes} />
             ) : (
-              <ListOfNotes deleteNotes={deleteNotes} key={note.id} note={note} favoriteNotes={favoriteNotes} />
+              <ListOfNotes deleteNotes={deleteNotes} key={note.id} note={note} favoriteNotes={favoriteNotes} startEdit={startEdit} />
             );
           })}
         </div>

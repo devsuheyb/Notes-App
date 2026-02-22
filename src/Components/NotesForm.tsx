@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 
-interface NotesType {
-  id: number;
-  title: string;
-  message: string;
-  createdAt: number;
-  updatedAt: number;
-  favorite: boolean;
-  time: string;
-  isEditing: boolean;
-}
+
 interface propsType {
   addNotes: (title: string, message: string) => void;
 }
@@ -24,7 +15,8 @@ const NotesForm = ({ addNotes }: propsType) => {
   // handle Submit function
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (input.message !== " " && input.title !== "") {
+    
+    if (input.message !== "" && input.title !== "") {
       addNotes(input.title, input.message);
     }
     setInput({ title: "", message: "" });

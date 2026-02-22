@@ -18,15 +18,16 @@ interface propsType {
   note: NotesType;
   deleteNotes: (id: number) => void;
   favoriteNotes: (id: number) => void;
+  startEdit:(id:number)=>void
 }
-const ListOfNotes = ({ note, deleteNotes,favoriteNotes }: propsType) => {
+const ListOfNotes = ({ note, deleteNotes,favoriteNotes,startEdit }: propsType) => {
   return (
     <div className="w-45  bg-gray-100 rounded-xl shadow-xl">
       <div className="">
         <div className="flex justify-between px-2 py-3">
           <p className="wrap-break-word  font-bold capitalize ">{note.title}</p>
           <span className="flex gap-1">
-            <MdModeEdit className="text-blue-500  cursor-pointer" />
+            <MdModeEdit onClick={()=> startEdit(note.id)} className="text-blue-500  cursor-pointer" />
             <MdDelete
               onClick={() => deleteNotes(note.id)}
               className="text-red-500  cursor-pointer"
