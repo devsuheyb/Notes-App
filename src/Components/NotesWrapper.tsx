@@ -87,7 +87,7 @@ const NotesWrapper = () => {
     if (selectValue === "All") {
       return searchNote;
     }
-    if (selectValue === "New") {
+    if (selectValue === "Updated") {
       return searchNote && note.createdAt !== note.updatedAt;
     }
     if (selectValue === "Old") {
@@ -116,7 +116,7 @@ const NotesWrapper = () => {
                     placeholder="search"
                   />
                 </div>
-              </div>{" "}
+              </div>
             </div>
 
             <div className="flex justify-center w-full ">
@@ -140,7 +140,7 @@ const NotesWrapper = () => {
               >
                 <option value="All">All</option>
                 <option value="Favorite">Favorite</option>
-                <option value="New">New</option>
+                <option value="Updated">Updated</option>
                 <option value="Old">Old</option>
               </select>
             </div>
