@@ -17,6 +17,7 @@ interface NotesType {
 const NotesWrapper = () => {
   const [notes, setNotes] = useState<NotesType[]>([]);
   const [selectValue, setSelectValue] = useState<string>("All");
+  const [search, setSearch] = useState("");
 
   // adding Notes function
   const addNotes = (title: string, message: string) => {
@@ -45,40 +46,57 @@ const NotesWrapper = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // delete Notes function 
-  const deleteNotes =(ID:number)=>{
-    setNotes(prevNote=>prevNote.filter((note)=> note.id !== ID))
-  }
- // favorite  toggle function 
-  const favoriteNotes =(ID:number)=>{
-    setNotes(prevNote=> prevNote.map((note)=> note.id == ID?  {...note,favorite:!note.favorite}:note))
-  }
+  // delete Notes function
+  const deleteNotes = (ID: number) => {
+    setNotes((prevNote) => prevNote.filter((note) => note.id !== ID));
+  };
+  // favorite  toggle function
+  const favoriteNotes = (ID: number) => {
+    setNotes((prevNote) =>
+      prevNote.map((note) =>
+        note.id == ID ? { ...note, favorite: !note.favorite } : note,
+      ),
+    );
+  };
 
   // edit function start here
-  const editNotes =(ID:number,title:string,message:string)=>{
-    const update= Date.now()
-    setNotes(prev=> prev.map((note)=> note.id ===ID ? {...note, updatedAt:update, title,message ,isEditing:false}:note))
-  }
+  const editNotes = (ID: number, title: string, message: string) => {
+    const update = Date.now();
+    setNotes((prev) =>
+      prev.map((note) =>
+        note.id === ID
+          ? { ...note, updatedAt: update, title, message, isEditing: false }
+          : note,
+      ),
+    );
+  };
 
   // stating edit function
-  const startEdit = (ID:number) =>{
-        setNotes(prev=> prev.map((note)=> note.id ===ID ? {...note, isEditing:true}:note))
-  }
-  
+  const startEdit = (ID: number) => {
+    setNotes((prev) =>
+      prev.map((note) =>
+        note.id === ID ? { ...note, isEditing: true } : note,
+      ),
+    );
+  };
+
   // filtering notes based on select values
   const filteredNote = notes.filter((note) => {
+    const searchNote = note.title.toLowerCase().includes(search.toLowerCase());
+
     if (selectValue === "All") {
-      return true;
+      return searchNote;
     }
     if (selectValue === "New") {
-      return note.createdAt !== note.updatedAt;
+      return searchNote && note.createdAt !== note.updatedAt;
     }
     if (selectValue === "Old") {
-      return note.createdAt === note.updatedAt;
+      return searchNote && note.createdAt === note.updatedAt;
     }
     if (selectValue === "Favorite") {
-      return note.favorite;
+      return searchNote && note.favorite;
     }
+    return false
   });
 
   return (
@@ -88,7 +106,17 @@ const NotesWrapper = () => {
           <div className="">
             <h1 className="flex justify-center capitalize mt-5">notes App</h1>
             <div className="flex justify-end pr-5 pt-5">
-              <Search />
+              <div>
+                <div>
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="border focus:outline-none pl-2"
+                    type="text"
+                    placeholder="search"
+                  />
+                </div>
+              </div>{" "}
             </div>
 
             <div className="flex justify-center w-full ">
@@ -124,7 +152,13 @@ const NotesWrapper = () => {
             return note.isEditing ? (
               <EditNotes key={note.id} note={note} editNotes={editNotes} />
             ) : (
-              <ListOfNotes deleteNotes={deleteNotes} key={note.id} note={note} favoriteNotes={favoriteNotes} startEdit={startEdit} />
+              <ListOfNotes
+                deleteNotes={deleteNotes}
+                key={note.id}
+                note={note}
+                favoriteNotes={favoriteNotes}
+                startEdit={startEdit}
+              />
             );
           })}
         </div>
